@@ -87,7 +87,7 @@
         <module>seatunnel-plugin-discovery</module>
         <module>seatunnel-formats</module>
         <module>seatunnel-dist</module>
-	    <module>seatunnel-server</module>
+            <module>seatunnel-server</module>
     </modules>
 
     <profiles>
