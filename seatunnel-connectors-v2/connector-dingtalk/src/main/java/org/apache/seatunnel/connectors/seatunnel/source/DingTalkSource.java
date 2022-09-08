@@ -32,7 +32,7 @@ import org.apache.seatunnel.common.constants.PluginType;
 import org.apache.seatunnel.connectors.seatunnel.common.DingTalkConstant;
 import org.apache.seatunnel.connectors.seatunnel.common.DingTalkParameter;
 import org.apache.seatunnel.connectors.seatunnel.common.DingTalkUtil;
-import org.apache.seatunnel.connectors.seatunnel.common.schema.SeatunnelSchema;
+import org.apache.seatunnel.connectors.seatunnel.common.schema.SeaTunnelSchema;
 import org.apache.seatunnel.connectors.seatunnel.common.source.AbstractSingleSplitReader;
 import org.apache.seatunnel.connectors.seatunnel.common.source.AbstractSingleSplitSource;
 import org.apache.seatunnel.connectors.seatunnel.common.source.SingleSplitReaderContext;
@@ -67,13 +67,9 @@ public class DingTalkSource extends AbstractSingleSplitSource<SeaTunnelRow> {
         }
         CheckResult hasToken = CheckConfigUtil.checkAllExists(pluginConfig, DingTalkConstant.ACCESS_TOKEN);
         if (!hasToken.isSuccess()) {
-            CheckResult hasKey = CheckConfigUtil.checkAllExists(pluginConfig, DingTalkConstant.APP_KEY);
+            CheckResult hasKey = CheckConfigUtil.checkAllExists(pluginConfig, DingTalkConstant.APP_KEY, DingTalkConstant.APP_SECRET);
             if (!hasKey.isSuccess()) {
                 throw new PrepareFailException(getPluginName(), PluginType.SOURCE, hasKey.getMsg());
-            }
-            CheckResult hasSecret = CheckConfigUtil.checkAllExists(pluginConfig, DingTalkConstant.APP_SECRET);
-            if (!hasSecret.isSuccess()) {
-                throw new PrepareFailException(getPluginName(), PluginType.SOURCE, hasSecret.getMsg());
             }
             String appToken = DingTalkUtil.getAppToken(pluginConfig.getString(DingTalkConstant.APP_KEY), pluginConfig.getString(DingTalkConstant.APP_SECRET));
             if (null == appToken) {
@@ -85,9 +81,9 @@ public class DingTalkSource extends AbstractSingleSplitSource<SeaTunnelRow> {
 
         if (pluginConfig.hasPath(DingTalkConstant.SCHEMA)) {
             Config schema = pluginConfig.getConfig(DingTalkConstant.SCHEMA);
-            this.rowType = SeatunnelSchema.buildWithConfig(schema).getSeaTunnelRowType();
+            this.rowType = SeaTunnelSchema.buildWithConfig(schema).getSeaTunnelRowType();
         } else {
-            this.rowType = SeatunnelSchema.buildSimpleTextSchema();
+            this.rowType = SeaTunnelSchema.buildSimpleTextSchema();
         }
     }
 
